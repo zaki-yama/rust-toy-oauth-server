@@ -1,8 +1,8 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+#[get("/authorize")]
+async fn authorize() -> impl Responder {
+    HttpResponse::Ok().body("Authorization endpoint!")
 }
 
 #[post("/echo")]
@@ -18,7 +18,7 @@ async fn manual_hello() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .service(hello)
+            .service(authorize)
             .service(echo)
             .route("/hey", web::get().to(manual_hello))
     })
