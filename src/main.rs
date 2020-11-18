@@ -1,7 +1,19 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct AuthorizeQuery {
+    response_type: String,
+    client_id: String,
+}
 
 #[get("/authorize")]
-async fn authorize() -> impl Responder {
+async fn authorize(params: web::Query<AuthorizeQuery>) -> impl Responder {
+    // TODO: check if `response_type = "code"`
+    println!("{}", params.client_id);
+
+    // TODO: check if `client_id` matches
+
     HttpResponse::Ok().body("Authorization endpoint!")
 }
 
