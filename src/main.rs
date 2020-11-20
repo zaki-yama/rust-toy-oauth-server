@@ -1,10 +1,18 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use askama::Template;
 use serde::Deserialize;
+
+#[derive(Template)]
+#[template(path = "authorize.html")]
+struct AuthorizeTemplate<'a> {
+    client_id: &'a str,
+}
 
 #[derive(Deserialize)]
 struct AuthorizeQuery {
     response_type: String,
     client_id: String,
+    redirect_uri: String,
 }
 
 #[get("/authorize")]
@@ -14,7 +22,10 @@ async fn authorize(params: web::Query<AuthorizeQuery>) -> impl Responder {
 
     // TODO: check if `client_id` matches
 
-    HttpResponse::Ok().body("Authorization endpoint!")
+    let template = AuthorizeTemplate {
+        client_id: &params.client_id,
+    };
+    HttpResponse::Ok().body(template.render().unwrap())
 }
 
 #[post("/echo")]
