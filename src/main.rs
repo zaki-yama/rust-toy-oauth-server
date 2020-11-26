@@ -28,9 +28,20 @@ async fn authorize(params: web::Query<AuthorizeQuery>) -> impl Responder {
     HttpResponse::Ok().body(template.render().unwrap())
 }
 
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
+#[derive(Deserialize, Debug)]
+struct DecisionFormData {
+    approve: Option<bool>,
+    deny: Option<bool>,
+}
+
+#[post("/decision")]
+async fn decision(req_body: web::Form<DecisionFormData>) -> impl Responder {
+    match req_body.approve {
+        Some(true) => println!("approved"),
+        _ => {}
+    }
+    println!("{:?}", req_body);
+    HttpResponse::Ok().body("hello")
 }
 
 async fn manual_hello() -> impl Responder {
@@ -42,7 +53,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(authorize)
-            .service(echo)
+            .service(decision)
             .route("/hey", web::get().to(manual_hello))
     })
     .bind("127.0.0.1:8080")?
