@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Authorization Request</title>
+  </head>
+  <body>
+      Your client_id: {{ client_id }}
+      <form action="/decision" method="POST">
+        <button type="submit" name="approve" value="true">Approve</button>
+        <button type="submit" name="deny" value="true">Deny</button>
+      </form>
+  </body>
+</html>
+
